@@ -20,11 +20,11 @@ public class BalanceDAOImple implements BalanceDAO {
 	private static final String DELETE_QUERY= "DELETE FROM balance where id = ?";
 	private static final String GET_MAX_QUERY = "SELECT MAX(encryptedValue) AS LargestBalance FROM balance";
 	private static final String GET_MIN_QUERY = "SELECT MIN(encryptedValue) AS LowestBalance FROM balance";
-	private static final String GET_GREATER_BALANCE = "SELECT encryptedValue FROM balance WHERE encryptedValue < ?";
-	private static final String GET_LOWEST_BALANCE = "SELECT encryptedValue FROM balance WHERE encryptedValue > ?";
-	private static final String GET_EQUAL_BALANCE = "SELECT encryptedValue FROM balance WHERE encryptedValue = ?";
+	private static final String GET_GREATER_BALANCE = "SELECT * FROM balance WHERE encryptedValue < ?";
+	private static final String GET_LOWEST_BALANCE = "SELECT * FROM balance WHERE encryptedValue > ?";
+	private static final String GET_EQUAL_BALANCE = "SELECT * FROM balance WHERE encryptedValue = ?";
 	private static final String GET_EQUAL_BALANCE_WITH_cardid = "SELECT encryptedValue FROM balance WHERE cardId = ?";
-	private static final String ORDER_BY = "SELECT encryptedValue FROM balance ORDER BY encryptedValue DESC";
+	private static final String ORDER_BY = "SELECT * FROM balance ORDER BY encryptedValue ASC";
 	
 	private static final String getBy_cardId = "SELECT encryptedValue FROM balance WHERE cardId = ?";
 	private static final String Update_Query = "UPDATE balance SET encryptedValue = ?  WHERE cardId = ?";
@@ -177,7 +177,8 @@ public class BalanceDAOImple implements BalanceDAO {
 			
 			int dec_resultInteger = dec_result.intValue();
 			
-			dec_resultInteger -= 150;
+			dec_resultInteger -= 350;
+			System.out.println("New value of balance : " + dec_resultInteger);
 			enc = Integer.toString(dec_resultInteger);
 			
 			BigInteger newEncryptedValue = new BigInteger(enc);
@@ -217,15 +218,17 @@ public class BalanceDAOImple implements BalanceDAO {
 			Connection connection= datasource.getConnection();
 			PreparedStatement pre = connection.prepareStatement(GET_MAX_QUERY);
 			ResultSet result = pre.executeQuery();
-
-			int id = result.getInt(1);
-			String username = result.getString(2);
-			String cardId = result.getString(3);
-			int balance = result.getInt(4);
 			
-			Balance balanceMax = new Balance(id, username, cardId, balance);
+			result.next();
 			
-			balanceListMax.add(balanceMax);
+			
+			String enc_value_max = result.getString(1);
+			
+			System.out.println(enc_value_max);
+			
+			pre.close();
+			connection.close();
+			
 		} catch (SQLException e) {
 
 			System.out.println(e.getMessage());
@@ -248,14 +251,13 @@ public class BalanceDAOImple implements BalanceDAO {
 			PreparedStatement pre = connection.prepareStatement(GET_MIN_QUERY);
 			ResultSet result = pre.executeQuery();
 
-			int id = result.getInt(1);
-			String username = result.getString(2);
-			String cardId = result.getString(3);
-			int balance = result.getInt(4);
+			result.next();
 			
-			Balance balanceMin = new Balance(id, username, cardId, balance);
+			String enc_value_min = result.getString(1);
 			
-			balanceListMin.add(balanceMin);
+			System.out.println(enc_value_min);
+			
+			
 
 		} catch (SQLException e) {
 
@@ -267,7 +269,7 @@ public class BalanceDAOImple implements BalanceDAO {
 	}// end of getLowestBalance
 
 
-	public List<Balance> getGraterBalance(int value){
+	public List<Balance> getGraterBalance(String value){
 
 		DataSource datasource = getDataSource();
 
@@ -277,17 +279,20 @@ public class BalanceDAOImple implements BalanceDAO {
 
 			Connection connection = datasource.getConnection();
 			PreparedStatement pre = connection.prepareStatement(GET_GREATER_BALANCE);
+			pre.setString(1, value);
 			ResultSet result = pre.executeQuery();
 
-			int id = result.getInt(1);
-			String username = result.getString(2);
-			String cardId = result.getString(3);
-			int balance = result.getInt(4);
+			while(result.next()) {
 
-			Balance balance1 = new Balance(id, username, cardId, balance);
-
-			balanceListGr.add(balance1);
-
+				int id = result.getInt(1);
+				String username = result.getString(2);
+				String cardId = result.getString(3);
+				int balance = result.getInt(4);
+	
+				Balance balance1 = new Balance(id, username, cardId, balance);
+	
+				balanceListGr.add(balance1);
+			}
 
 		} catch (SQLException e) {
 
@@ -299,7 +304,7 @@ public class BalanceDAOImple implements BalanceDAO {
 	}// end of getgeraterbalance()
 
 
-	public List<Balance> getLowestBalance(int value){
+	public List<Balance> getLowestBalance(String value){
 
 		DataSource datasource = getDataSource();
 
@@ -309,17 +314,22 @@ public class BalanceDAOImple implements BalanceDAO {
 
 			Connection connection = datasource.getConnection();
 			PreparedStatement pre = connection.prepareStatement(GET_LOWEST_BALANCE);
+			pre.setString(1, value);
 			ResultSet result = pre.executeQuery();
 
-			int id = result.getInt(1);
-			String username = result.getString(2);
-			String cardId = result.getString(3);
-			int balance = result.getInt(4);
+			
+			while(result.next()) {
 
-			Balance balance2 = new Balance(id, username, cardId, balance);
-
-			balanceListlw.add(balance2);
-
+				int id = result.getInt(1);
+				String username = result.getString(2);
+				String cardId = result.getString(3);
+				int balance = result.getInt(4);
+	
+				Balance balance2 = new Balance(id, username, cardId, balance);
+	
+				balanceListlw.add(balance2);
+			}
+			
 
 		} catch (SQLException e) {
 
@@ -331,7 +341,7 @@ public class BalanceDAOImple implements BalanceDAO {
 	}// end of getlowestbalance()
 	
 	
-	public List<Balance> getEqualBalance(int value){
+	public List<Balance> getEqualBalance(String value){
 
 		DataSource datasource = getDataSource();
 
@@ -341,17 +351,21 @@ public class BalanceDAOImple implements BalanceDAO {
 
 			Connection connection = datasource.getConnection();
 			PreparedStatement pre = connection.prepareStatement(GET_EQUAL_BALANCE);
+			pre.setString(1, value);
 			ResultSet result = pre.executeQuery();
-
-			int id = result.getInt(1);
-			String username = result.getString(2);
-			String cardId = result.getString(3);
-			int balance = result.getInt(4);
-
-			Balance balance3 = new Balance(id, username, cardId, balance);
-
-			balanceListeq.add(balance3);
-
+			
+			
+			while(result.next()) {
+				
+				int id = result.getInt(1);
+				String username = result.getString(2);
+				String cardId = result.getString(3);
+				int balance = result.getInt(4);
+	
+				Balance balance3 = new Balance(id, username, cardId, balance);
+	
+				balanceListeq.add(balance3);
+			}
 
 		} catch (SQLException e) {
 
@@ -375,16 +389,24 @@ public class BalanceDAOImple implements BalanceDAO {
 			Connection connection = datasource.getConnection();
 			PreparedStatement pre = connection.prepareStatement(ORDER_BY);
 			ResultSet result = pre.executeQuery();
+			
+			while(result.next()) {
 
-			int id = result.getInt(1);
-			String username = result.getString(2);
-			String cardId = result.getString(3);
-			int balance = result.getInt(4);
 
-			Balance balance4 = new Balance(id, username, cardId, balance);
+				int id = result.getInt(1);
+				String username = result.getString(2);
+				String cardId = result.getString(3);
+				int balance = result.getInt(4);
+				
+				Balance balance4 = new Balance(id, username, cardId, balance);
+				balanceListor.add(balance4);
 
-			balanceListor.add(balance4);
-
+			}// end of while
+			
+			
+			pre.close();
+			connection.close();
+			
 
 		} catch (SQLException e) {
 

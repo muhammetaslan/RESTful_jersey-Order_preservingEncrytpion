@@ -117,46 +117,82 @@
 
 
 
+<!-- 
+
+	<div class="row">
+		<div class="col-md-12">
+			<legend>Database operation</legend>
+
+			<table id="example" class="table table-striped table-bordered">
+				<thead>
+
+					<form class="form-horizontal" action="balanceController_op"
+						method="POST">
+
+						<td><select  name ="operation" class ="form-group">
+								<option value="bigger">Get Lower than Balance</option>
+								<option value="smaller">Get Higher than Balance</option>
+								<option value="equal">Get Equal Balance</option>
+
+						</select></td>
+						
+						<td>
+						
+							<div class="form-group">
+								<label class="col-md-4 control-label" for="balance">balance</label>
+								<div class="col-md-4">
+									<input id="balance" name="balance" type="number" placeholder=""
+										class="form-control input-md">
 	
+								</div>
+							</div>
+						</td>
+						
+						<td>
+							
+								<div class="form-group">
+									<label class="col-md-4 control-label" for="get_result"></label>
+									<div class="col-md-4">
+										<input type="submit" class="btn btn-info" value="Get Result">
+									</div>
+								</div>
+						</td>
+				-->
+				<!-- 
+						<td><a href="balanceController_op?balanceId=222"
+							class="btn btn-danger" type="button">Get Lower than Balance</a></td>
 
-				<div class="row">
-					<div class="col-md-12">
-						<legend>Database operation</legend>
+						<td><a href="balanceController_op?balanceId=333"
+							class="btn btn-danger" type="button">Get Higher than Balance</a></td>
 
-						<table id="example" class="table table-striped table-bordered">
-							<thead>
-								<td><a href="balanceController_op?balanceId=222"
-									class="btn btn-danger" type="button">Get Max Balance</a></td>
+						<td><a href="balanceController_op?balanceId=444"
+							class="btn btn-danger" type="button">Get Equal Balance</a></td>
+				 
+					</form>
 
-								<td><a href="balanceController_op?balanceId=333"
-									class="btn btn-danger" type="button">Get Min Balance</a></td>
-
-								<td><a href="balanceController_op?balanceIdGR=${balance.id}"
-									class="btn btn-danger" type="button">Get ORDER BY Balance</a></td>
-
-								<tr>
-									<th>username</th>
-									<th>cardId</th>
-									<th>Balance</th>
-								</tr>
-							</thead>
-							<tbody>
+					<tr>
+						<th>username</th>
+						<th>cardId</th>
+						<th>Balance</th>
+					</tr>
+				</thead>
+				<tbody>
 
 
-								<c:forEach items="${allBalance_two}" var="balance1">
-									<tr>
-										<td><c:out value="${balance1.username}" /></td>
-										<td><c:out value="${balance1.cardId}" /></td>
-										<td><c:out value="${balance1.balance}" /></td>
+					<c:forEach items="${allBalance_two}" var="balance1">
+						<tr>
+							<td><c:out value="${balance1.username}" /></td>
+							<td><c:out value="${balance1.cardId}" /></td>
+							<td><c:out value="${balance1.balance}" /></td>
 
-									</tr>
-								</c:forEach>
+						</tr>
+					</c:forEach>
 
 
-							</tbody>
-						</table>
-					</div>
-				</div>
-
+				</tbody>
+			</table>
+		</div>
+	</div>
+-->
 </body>
 </html>
